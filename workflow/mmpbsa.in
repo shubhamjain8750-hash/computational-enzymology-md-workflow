@@ -1,0 +1,25 @@
+&general
+  startframe=1,
+  endframe=50000,
+  interval=200,     
+  verbose=1,
+  keep_files=0,
+  entropy=0,
+  netcdf=1,
+  use_sander=0,      
+/
+
+&gb
+  igb=5,
+  saltcon=0.150,
+/
+
+&pb
+  istrng=0.150,
+/
+
+&decomp
+  idecomp=2,
+  dec_verbose=1,
+  print_res="1-331",
+/

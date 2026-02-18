@@ -1,0 +1,13 @@
+parm solv_complexN.prmtop
+trajin md1.nc
+
+# Lys–PLP (C4)
+distance d_Lys_PLP :188@NZ :UNP@C4 out dist_plp_lys.dat
+
+# PLP–UNI (min atom-atom distance)
+distance d_PLP_UNI :UNP@C4 :UNI out dist_plp_uni.dat
+
+# PLP–UNL
+distance d_PLP_UNL :UNP@C4 :UNL out dist_plp_unl.dat
+
+run

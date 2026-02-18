@@ -1,0 +1,44 @@
+# ============================================
+# cpptraj_rg_sasa_complex_last10_Amber20.in
+# Radius of Gyration (Rg) and SASA calculation
+# for Protein–Ligand Complexes (UNI, UNL, UNP)
+# Amber20-compatible script
+# ============================================
+
+parm solv_complexN.prmtop
+
+# Load reference structure
+reference md1.rst7 parm solv_complexN.prmtop
+
+# Load only last 10 frames from trajectory
+trajin md1.nc 1 last 10
+
+# --------------------------------------------------------------
+# 1. Radius of Gyration (Rg)
+# --------------------------------------------------------------
+
+# Protein alone (residues 1–330)
+radgyr :1-330 out Rg_protein_last10.dat
+
+# Protein–Ligand Complexes
+radgyr :1-330,UNI out Rg_protein_UNI_complex_last10.dat
+radgyr :1-330,UNL out Rg_protein_UNL_complex_last10.dat
+radgyr :1-330,UNP out Rg_protein_UNP_complex_last10.dat
+
+# --------------------------------------------------------------
+# 2. Solvent Accessible Surface Area (SASA)
+# --------------------------------------------------------------
+
+# Protein alone
+surf :1-330 out SASA_protein_last10.dat
+
+# Protein–Ligand Complexes
+surf :1-330,UNI out SASA_protein_UNI_complex_last10.dat
+surf :1-330,UNL out SASA_protein_UNL_complex_last10.dat
+surf :1-330,UNP out SASA_protein_UNP_complex_last10.dat
+
+# --------------------------------------------------------------
+# Execute analysis
+# --------------------------------------------------------------
+run
+quit

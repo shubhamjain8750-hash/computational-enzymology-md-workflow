@@ -1,0 +1,69 @@
+# ============================================================
+#   Post-MD Analysis + MMGBSA Preparation: Protein–Ligand
+# ============================================================
+
+# Load topology
+parm solv_complexN.prmtop
+
+# Load trajectory
+trajin md1.nc
+
+# Load reference
+reference md1.rst7 parm solv_complexN.prmtop
+
+# ------------------------------------------------------------
+# 1. RMSD (C-alpha atoms)
+# ------------------------------------------------------------
+rms RMSD_Calpha :1-330@CA reference out rmsd_calpha.dat
+
+# ------------------------------------------------------------
+# 2. RMSF (C-alpha atoms by residue)
+# ------------------------------------------------------------
+atomicfluct out rmsf_calpha.dat :1-330@CA byres
+
+# ------------------------------------------------------------
+# 3. Hydrogen bond analysis (Protein–Ligand)
+# ------------------------------------------------------------
+hbond Hb_UNI out hbond_uni.dat avgout avg_hb_uni.dat \
+      solventdonor :WAT solventacceptor :WAT \
+      donormask :1-330 acceptormask :UNI
+
+hbond Hb_UNL out hbond_unl.dat avgout avg_hb_unl.dat \
+      solventdonor :WAT solventacceptor :WAT \
+      donormask :1-330 acceptormask :UNL
+
+hbond Hb_UNP out hbond_unp.dat avgout avg_hb_unp.dat \
+      solventdonor :WAT solventacceptor :WAT \
+      donormask :1-330 acceptormask :UNP
+
+# ------------------------------------------------------------
+# 4. Radius of Gyration
+# ------------------------------------------------------------
+radgyr out radgyr_protein.dat :1-330@CA
+
+# ------------------------------------------------------------
+# 5. Solvent Accessible Surface Area (SASA)
+# ------------------------------------------------------------
+surf :1-330 out sasa_protein.dat
+surf :UNI out sasa_uni.dat
+surf :UNL out sasa_unl.dat
+surf :UNP out sasa_unp.dat
+surf :1-330,UNI,UNL,UNP out sasa_complex.dat
+
+# ------------------------------------------------------------
+# 6. COM distance (Protein–Ligand)
+# ------------------------------------------------------------
+distance COMD_UNI :1-330 :UNI out comdist_uni.dat distance type com
+distance COMD_UNL :1-330 :UNL out comdist_unl.dat distance type com
+distance COMD_UNP :1-330 :UNP out comdist_unp.dat distance type com
+
+# ------------------------------------------------------------
+# 7. Average structure (from MD trajectory)
+# ------------------------------------------------------------
+average avg_structure.pdb pdb :1-330,UNI,UNL,UNP
+
+# ------------------------------------------------------------
+# 8. Prepare stripped trajectory for MMGBSA
+# ------------------------------------------------------------
+strip :WAT,Na+,Cl-
+trajout stripped_for_MMGBSA.nc
